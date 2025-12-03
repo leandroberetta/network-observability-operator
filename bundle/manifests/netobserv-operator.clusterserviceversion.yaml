@@ -77,6 +77,9 @@ metadata:
                 "excludeInterfaces": [
                   "lo"
                 ],
+                "features": [
+                  "DNSTracking"
+                ],
                 "imagePullPolicy": "IfNotPresent",
                 "interfaces": [],
                 "kafkaBatchSize": 1048576,
@@ -96,7 +99,7 @@ metadata:
                     "memory": "50Mi"
                   }
                 },
-                "sampling": 50
+                "sampling": 1
               },
               "type": "eBPF"
             },
@@ -216,6 +219,11 @@ metadata:
               "enable": true
             },
             "processor": {
+              "advanced": {
+                "env": {
+                  "EXPERIMENTAL_ALERTS_HEALTH": "true"
+                }
+              },
               "imagePullPolicy": "IfNotPresent",
               "kafkaConsumerAutoscaler": null,
               "kafkaConsumerBatchSize": 10485760,
@@ -224,7 +232,21 @@ metadata:
               "logLevel": "info",
               "logTypes": "Flows",
               "metrics": {
-                "disableAlerts": [],
+                "disableHealthRules": [],
+                "healthRules": [
+                  {
+                    "mode": "recording",
+                    "template": "DNSErrors",
+                    "variants": [
+                      {
+                        "groupBy": "Namespace",
+                        "thresholds": {
+                          "warning": "5"
+                        }
+                      }
+                    ]
+                  }
+                ],
                 "server": {
                   "port": 9401
                 }
@@ -253,7 +275,7 @@ metadata:
     categories: Monitoring, Networking, Observability
     console.openshift.io/plugins: '["netobserv-plugin"]'
     containerImage: quay.io/netobserv/network-observability-operator:1.10.0-community
-    createdAt: "2025-11-26T13:16:01Z"
+    createdAt: "2025-12-03T19:46:44Z"
     description: Network flows collector and monitoring solution
     operatorframework.io/initialization-resource: '{"apiVersion":"flows.netobserv.io/v1beta2",
       "kind":"FlowCollector","metadata":{"name":"cluster"},"spec": {}}'
@@ -620,10 +642,10 @@ spec:
         path: processor.filters
       - displayName: Log types
         path: processor.logTypes
-      - displayName: Alerts
-        path: processor.metrics.alerts
-      - displayName: Disable alerts
-        path: processor.metrics.disableAlerts
+      - displayName: Disable health rules
+        path: processor.metrics.disableHealthRules
+      - displayName: Health rules
+        path: processor.metrics.healthRules
       - displayName: Include list
         path: processor.metrics.includeList
       - displayName: Port
