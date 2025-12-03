@@ -11611,14 +11611,6 @@ Possible values are: `alert` (default), `recording`.<br/>
         </tr>
     </thead>
     <tbody><tr>
-        <td><b><a href="#flowcollectorspecprocessormetricshealthrulesindexvariantsindexthresholds">thresholds</a></b></td>
-        <td>object</td>
-        <td>
-          Thresholds of the health rule per severity.
-They are expressed as a percentage of errors above which the alert is triggered. They must be parsable as floats.<br/>
-        </td>
-        <td>true</td>
-      </tr><tr>
         <td><b>groupBy</b></td>
         <td>enum</td>
         <td>
@@ -11634,6 +11626,15 @@ They are expressed as a percentage of errors above which the alert is triggered.
           The low volume threshold allows to ignore metrics with a too low volume of traffic, in order to improve signal-to-noise.
 It is provided as an absolute rate (bytes per second or packets per second, depending on the context).
 When provided, it must be parsable as a float.<br/>
+        </td>
+        <td>false</td>
+      </tr><tr>
+        <td><b><a href="#flowcollectorspecprocessormetricshealthrulesindexvariantsindexthresholds">thresholds</a></b></td>
+        <td>object</td>
+        <td>
+          Thresholds of the health rule per severity.
+They are expressed as a percentage of errors above which the alert is triggered. They must be parsable as floats.
+Required for alert mode, optional for recording mode.<br/>
         </td>
         <td>false</td>
       </tr><tr>
@@ -11661,6 +11662,7 @@ When provided, it must be parsable as a float.<br/>
 
 Thresholds of the health rule per severity.
 They are expressed as a percentage of errors above which the alert is triggered. They must be parsable as floats.
+Required for alert mode, optional for recording mode.
 
 <table>
     <thead>

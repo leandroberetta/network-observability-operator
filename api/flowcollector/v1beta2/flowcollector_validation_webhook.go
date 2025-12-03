@@ -370,6 +370,18 @@ func (v *validator) validateFLPMetricsForHealthRules() {
 	metrics := v.fc.GetIncludeList()
 	healthRules := v.fc.GetFLPHealthRules()
 	for _, g := range healthRules {
+		// Validate thresholds for alert mode
+		if g.Mode == ModeAlert {
+			for _, a := range g.Variants {
+				if a.Thresholds.Warning == "" && a.Thresholds.Critical == "" && a.Thresholds.Info == "" {
+					v.errors = append(
+						v.errors,
+						fmt.Errorf("HealthRule %s/%s in alert mode requires at least one threshold (warning, critical, or info)", g.Template, a.GroupBy),
+					)
+				}
+			}
+		}
+
 		for _, a := range g.Variants {
 			reqMetrics1, reqMetrics2 := GetElligibleMetricsForHealthRule(g.Template, &a)
 			// At least one metric from reqMetrics1 should be present, same for reqMetrics2

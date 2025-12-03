@@ -13,14 +13,14 @@ spec:
     ebpf:
       imagePullPolicy: IfNotPresent
       logLevel: info
-      sampling: 50
+      sampling: 1
       cacheActiveTimeout: 5s
       cacheMaxFlows: 100000
       # Change privileged to "true" on old kernel version not knowing CAP_BPF or when using "PacketDrop" feature
       privileged: false
-      # features:
+      features:
+      - "DNSTracking"
       # - "PacketDrop"
-      # - "DNSTracking"
       # - "FlowRTT"
       # - "NetworkEvents"
       # - "PacketTranslation"
@@ -102,26 +102,13 @@ spec:
       # - "namespace_drop_packets_total"
       # - "node_drop_packets_total"
       # - "namespace_rtt_seconds"
-      # healthRules:
-      # - template: PacketDropsByKernel
-      #   mode: alert  # or "recording" to generate recording rules instead of alerts
-      #   variants:
-      #   - thresholds:
-      #       critical: "15"
-      #       warning: "10"
-      #       info: "5"
-      #   - thresholds:
-      #       critical: "15"
-      #       warning: "10"
-      #       info: "5"
-      #     groupBy: Node
-      #     lowVolumeThreshold: "5"
-      #   - thresholds:
-      #       critical: "15"
-      #       warning: "10"
-      #       info: "5"
-      #     groupBy: Namespace
-      #     lowVolumeThreshold: "5"
+      healthRules:
+      - template: DNSErrors
+        mode: recording  # Generate recording rule instead of alert
+        variants:
+        - groupBy: Namespace
+          thresholds:
+            warning: "5"  # Used as threshold value for the recording rule expression
     # Kafka consumer stage configuration
     kafkaConsumerReplicas: 3
     kafkaConsumerAutoscaler: null
@@ -142,7 +129,9 @@ spec:
     #       (SrcK8S_Namespace="netobserv" OR (SrcK8S_Namespace="openshift-console" AND DstK8S_Namespace="netobserv"))
     #     outputTarget: Loki
     #     sampling: 10
-    # advanced:
+    advanced:
+      env:
+        EXPERIMENTAL_ALERTS_HEALTH: "true"
     #   secondaryNetworks:
     #     - name: "my-vms/custom-nad"
     #       # Any of: MAC, IP, Interface

@@ -136,41 +136,6 @@ var (
 				},
 			},
 		},
-		{
-			Template: HealthRuleExternalEgressHighTrend,
-			Variants: []HealthRuleVariant{
-				{
-					Thresholds: HealthRuleThresholds{
-						Warning: "5",
-					},
-					GroupBy: GroupByNode,
-				},
-				{
-					Thresholds: HealthRuleThresholds{
-						Info:    "5",
-						Warning: "10",
-					},
-					GroupBy: GroupByNamespace,
-				},
-			},
-		},
-		{
-			Template: HealthRuleExternalIngressHighTrend,
-			Variants: []HealthRuleVariant{
-				{
-					Thresholds: HealthRuleThresholds{
-						Warning: "5",
-					},
-					GroupBy: GroupByNode,
-				},
-				{
-					Thresholds: HealthRuleThresholds{
-						Info:    "5",
-						Warning: "10",
-					},
-					GroupBy: GroupByNamespace,
-				},
-			},
-		},
+		// TODO: Implement ExternalEgressHighTrend, ExternalIngressHighTrend, CrossAZ templates
 	}
 )
