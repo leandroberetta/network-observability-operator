@@ -77,9 +77,7 @@ metadata:
                 "excludeInterfaces": [
                   "lo"
                 ],
-                "features": [
-                  "DNSTracking"
-                ],
+                "features": null,
                 "imagePullPolicy": "IfNotPresent",
                 "interfaces": [],
                 "kafkaBatchSize": 1048576,
@@ -99,7 +97,7 @@ metadata:
                     "memory": "50Mi"
                   }
                 },
-                "sampling": 1
+                "sampling": 50
               },
               "type": "eBPF"
             },
@@ -233,20 +231,7 @@ metadata:
               "logTypes": "Flows",
               "metrics": {
                 "disableHealthRules": [],
-                "healthRules": [
-                  {
-                    "mode": "recording",
-                    "template": "DNSErrors",
-                    "variants": [
-                      {
-                        "groupBy": "Namespace",
-                        "thresholds": {
-                          "warning": "5"
-                        }
-                      }
-                    ]
-                  }
-                ],
+                "healthRules": [],
                 "server": {
                   "port": 9401
                 }
@@ -275,7 +260,7 @@ metadata:
     categories: Monitoring, Networking, Observability
     console.openshift.io/plugins: '["netobserv-plugin"]'
     containerImage: quay.io/netobserv/network-observability-operator:1.10.0-community
-    createdAt: "2025-12-03T19:46:44Z"
+    createdAt: "2025-12-03T21:55:25Z"
     description: Network flows collector and monitoring solution
     operatorframework.io/initialization-resource: '{"apiVersion":"flows.netobserv.io/v1beta2",
       "kind":"FlowCollector","metadata":{"name":"cluster"},"spec": {}}'
