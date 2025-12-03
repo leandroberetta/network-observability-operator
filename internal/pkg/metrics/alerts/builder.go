@@ -91,17 +91,9 @@ func convertToRules(template flowslatest.HealthRuleTemplate, mode flowslatest.He
 				enabledMetrics: enabledMetrics,
 				side:           side,
 				severity:       "",
-				threshold:      healthRule.Thresholds.Warning, // Use warning threshold as default for recording
+				threshold:      "", // Not used for recording rules
 				upperThreshold: "",
 				duration:       monitoringv1.Duration("5m"),
-			}
-			// Use first non-empty threshold for recording rule
-			if healthRule.Thresholds.Critical != "" {
-				rb.threshold = healthRule.Thresholds.Critical
-			} else if healthRule.Thresholds.Warning != "" {
-				rb.threshold = healthRule.Thresholds.Warning
-			} else if healthRule.Thresholds.Info != "" {
-				rb.threshold = healthRule.Thresholds.Info
 			}
 
 			if r, err := rb.convertToRule(); err != nil {
