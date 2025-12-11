@@ -19,7 +19,7 @@ spec:
       # Change privileged to "true" on old kernel version not knowing CAP_BPF or when using "PacketDrop" feature
       privileged: false
       features:
-      # - "DNSTracking"
+      - "DNSTracking"
       # - "PacketDrop"
       # - "FlowRTT"
       # - "NetworkEvents"
@@ -102,7 +102,11 @@ spec:
       # - "namespace_drop_packets_total"
       # - "node_drop_packets_total"
       # - "namespace_rtt_seconds"
-      healthRules: []
+      healthRules:
+      - template: DNSErrors
+        mode: recording
+        variants:
+        - groupBy: Namespace
     # Kafka consumer stage configuration
     kafkaConsumerReplicas: 3
     kafkaConsumerAutoscaler: null

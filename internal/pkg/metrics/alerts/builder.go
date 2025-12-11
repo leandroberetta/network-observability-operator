@@ -214,7 +214,7 @@ func toSnakeCase(s string) string {
 }
 
 // buildRecordingRuleName builds recording rule name following the convention:
-// netobserv:health:<template>:<groupby>:<side>:rate5m
+// netobserv:health:<template>:<groupby>:<side>:rate2m
 func (rb *ruleBuilder) buildRecordingRuleName() string {
 	parts := []string{"netobserv", "health"}
 
@@ -231,8 +231,8 @@ func (rb *ruleBuilder) buildRecordingRuleName() string {
 		parts = append(parts, strings.ToLower(string(rb.side)))
 	}
 
-	// Add rate interval (default to rate5m for 2m window)
-	parts = append(parts, "rate5m")
+	// Add rate interval (rate2m for 2m window)
+	parts = append(parts, "rate2m")
 
 	return strings.Join(parts, ":")
 }
@@ -255,7 +255,7 @@ func (rb *ruleBuilder) createRule(promQL, summary, description string) (*monitor
 			Record: recordName,
 			// Note: Recording rules cannot have annotations in Prometheus
 			Expr:   intstr.FromString(promQL),
-			Labels: buildLabels("", true),
+			Labels: buildRecordingRuleLabels(string(rb.template)),
 		}, nil
 	}
 
@@ -331,6 +331,14 @@ func buildLabels(severity string, forHealth bool) map[string]string {
 		m["netobserv"] = "true" // means that the rule should be fetched by netobserv console plugin for health
 	}
 	return m
+}
+
+func buildRecordingRuleLabels(template string) map[string]string {
+	return map[string]string{
+		"app":       "netobserv",
+		"netobserv": "true", // means that the rule should be fetched by netobserv console plugin for health
+		"template":  template, // template name for UI display
+	}
 }
 
 func (rb *ruleBuilder) buildLabelFilter(additionalFilter string) string {
