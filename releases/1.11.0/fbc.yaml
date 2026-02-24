@@ -14,6 +14,18 @@ spec:
 apiVersion: appstudio.redhat.com/v1alpha1
 kind: Release
 metadata:
+  name: netobserv-1-11-0-fbc-4-13-1
+  namespace: ocp-network-observab-tenant
+  labels:
+    release.appstudio.openshift.io/author: 'jtakvori'
+spec:
+  releasePlan: netobserv-fbc-v4-13
+  snapshot: catalog-4-13-20260224-071806-000
+---
+# Done
+apiVersion: appstudio.redhat.com/v1alpha1
+kind: Release
+metadata:
   name: netobserv-1-11-0-fbc-4-14-0
   namespace: ocp-network-observab-tenant
   labels:
