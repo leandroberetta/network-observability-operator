@@ -202,7 +202,8 @@ func (r *CPReconciler) reconcileConfigMap(ctx context.Context, builder *builder,
 		}
 	}
 
-	newCM, configDigest, err := builder.configMap(ctx, lokiStack)
+	externalRecordingAnnotations := getExternalRecordingAnnotations(ctx, r.Client)
+	newCM, configDigest, err := builder.configMap(ctx, externalRecordingAnnotations, lokiStack)
 	if err != nil {
 		return "", err
 	}

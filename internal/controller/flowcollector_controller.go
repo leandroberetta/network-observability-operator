@@ -7,6 +7,7 @@ import (
 	lokiv1 "github.com/grafana/loki/operator/apis/loki/v1"
 	osv1 "github.com/openshift/api/console/v1"
 	securityv1 "github.com/openshift/api/security/v1"
+	monitoringv1 "github.com/prometheus-operator/prometheus-operator/pkg/apis/monitoring/v1"
 	appsv1 "k8s.io/api/apps/v1"
 	ascv2 "k8s.io/api/autoscaling/v2"
 	corev1 "k8s.io/api/core/v1"
@@ -76,13 +77,20 @@ func Start(ctx context.Context, mgr *manager.Manager) (manager.PostCreateHook, e
 		builder.Watches(
 			&lokiv1.LokiStack{},
 			handler.EnqueueRequestsFromMapFunc(func(_ context.Context, _ client.Object) []ctrl.Request {
-				// When a LokiStack changes, trigger reconcile of the FlowCollector
 				return []ctrl.Request{{NamespacedName: constants.FlowCollectorName}}
 			}),
 		)
 		r.lokiWatcherStarted = true
 		log.Info("LokiStack CRD detected")
 	}
+
+	// When a PrometheusRule changes, trigger reconcile so console-plugin config is updated (recording-rule annotations)
+	builder.Watches(
+		&monitoringv1.PrometheusRule{},
+		handler.EnqueueRequestsFromMapFunc(func(_ context.Context, _ client.Object) []reconcile.Request {
+			return []reconcile.Request{{NamespacedName: constants.FlowCollectorName}}
+		}),
+	)
 
 	ctrl, err := builder.Build(&r)
 	if err != nil {
